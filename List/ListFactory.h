@@ -9,7 +9,7 @@ namespace ListSpace
 		static constexpr List* generateListLoop(Args... args)
 		{
 			// we allow a looped list of a single element
-		//	static_assert(((sizeof...(args)) % 2 == 0), "The last list element cannot be created: not enough constructor arguments!"); // check the parameter count
+			static_assert(((sizeof...(args)) % 2 == 0), "The last list element cannot be created: not enough constructor arguments!"); // check the parameter count
 
 			List* head{ helperListGenerator(args...) };
 			return SetLoop(head);
