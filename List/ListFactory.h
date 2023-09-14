@@ -17,6 +17,8 @@ namespace ListSpace
 		{
 			List* head = list;
 
+			// some comments added here
+
 			while (head->next != nullptr)
 			{
 				head = head->next;
