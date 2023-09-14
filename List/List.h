@@ -11,22 +11,37 @@
 
 namespace ListSpace
 {
-	using Mark = int;
+	using Mark = unsigned int;
 
+	/**
+	 * @brief Data type to be stored in the list
+	 */
 	struct Record
 	{
 		std::string name;
 		Mark mark;
 	};
 
+	/**
+	 * @brief A temlate list that can store any type of information
+	 * @tparam T type of element in the list
+	 */
 	template<typename T>
 	struct AdvancedList
 	{
 		T element;
-		AdvancedList<T>* next;
-		AdvancedList<T>(const T& el, AdvancedList<T>* next = nullptr) : element{ el }, next{ next } { };
+		AdvancedList<T>* its_next;
+
+		AdvancedList<T>(const T& el, AdvancedList<T>* its_next = nullptr) : element{ el }, its_next{ its_next } { };
+		const T& get_data() const { return element; }
+		T& set_data() { return element; }
+		const AdvancedList<T>* next() const { return its_next; }
+		AdvancedList<T>*& next() { return its_next; }
 	};
 
+	/**
+	 * @brief an alias for the instantiated list template
+	 */
 	using List = AdvancedList<Record>;
 } // ListSpace
 

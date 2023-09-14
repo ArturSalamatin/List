@@ -1,5 +1,6 @@
 #pragma once
 #include "List.h"
+
 namespace ListSpace 
 {
 	struct ListFactory
@@ -7,7 +8,8 @@ namespace ListSpace
 		template< typename... Args>
 		static constexpr List* generateListLoop(Args... args)
 		{
-			static_assert(((sizeof...(args)) % 2 == 0), "The last list element cannot be created: not enough constructor arguments!"); // check the parameter count
+			// we allow a looped list of a single element
+		//	static_assert(((sizeof...(args)) % 2 == 0), "The last list element cannot be created: not enough constructor arguments!"); // check the parameter count
 
 			List* head{ helperListGenerator(args...) };
 			return SetLoop(head);
@@ -16,12 +18,10 @@ namespace ListSpace
 		static List* SetLoop(List* list)  
 		{
 			List* head = list;
-
-			while (head->next != nullptr)
-			{
-				head = head->next;
-			}
-			head->next = list;
+			//get to the tail
+			while (head->next() != nullptr)
+				head = head->next();
+			head->next() = list;
 			return list;
 		}
 
@@ -33,12 +33,20 @@ namespace ListSpace
 		}
 
 	private:
-
 		// generates a list, element by element using a variadic template recursive function
 		template<typename Name, typename Mark, typename... Args>
-		static constexpr List* helperListGenerator(Name name, Mark mark, Args... args)
+		static constexpr List* helperListGenerator(Name&& name, Mark&& mark, Args&&... args)
 		{
-			List* l = new List{ Record{name, mark}, helperListGenerator(args...) };
+			List* l = 
+				new List
+			{
+				Record
+				{
+					std::forward<Name>(name),
+					std::forward<Mark>(mark)
+				},
+				helperListGenerator(std::forward<Args>(args)...)
+			};
 			return l;
 		}
 		// generates a list of zeo elements --- returns a nullptr --- it is a base for a variadic template recursive function
